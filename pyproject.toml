@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "advent-of-write"
+version = "0.1.0"
+description = ""
+authors = ["salko-ua <github@salko-ua.de>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+black = "^24.10.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
