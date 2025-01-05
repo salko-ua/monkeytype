@@ -7,4 +7,4 @@ token=''
 monkey = Authorization(token)
 users = Users(monkey)
 
-pprint(users.get_personal_bests('time').limits.x_ratelimit_reset)
+pprint(users.get_profile("salo"))

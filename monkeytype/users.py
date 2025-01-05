@@ -46,6 +46,21 @@ class Users:
             limits=Limits.from_dict(headers)
         )
 
+    def get_tags(self):
+        response = requests.get(url=f"{self.auth.users}/tags", headers=self.auth.auth_header)
+        json = response.json()
+        return json
+
+    def get_stats(self):
+        response = requests.get(url=f"{self.auth.users}/stats", headers=self.auth.auth_header)
+        json = response.json()
+        return json
+
+    def get_profile(self, uid_or_username: str | int):
+        response = requests.get(url=f"{self.auth.users}/{uid_or_username}/profile", headers=self.auth.auth_header)
+        json = response.json()
+        return json
+
 
 @dataclasses.dataclass
 class Limits:
