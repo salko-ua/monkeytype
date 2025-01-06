@@ -15,6 +15,6 @@ monkey = Authorization(token)
 users = Users(monkey)
 
 # Example of usage method get_personal_bests
-print(users.get_personal_bests("time")
+print(users.get_personal_bests("time"))
 ```
 
