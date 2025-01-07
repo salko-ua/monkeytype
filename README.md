@@ -15,6 +15,14 @@ monkey = Authorization(token)
 users = Users(monkey)
 
 # Example of usage method get_personal_bests
-print(users.get_personal_bests("time"))
+# Temp docs
+# Users has methods
+# methods has any data after they was called and has limits\
+# example
+bests = users.get_personal_bests("time") # get personal best by time
+ex1 = bests.limits.x_ratelimit_limit
+ex2 = bests.limits.x_ratelimit_reset
+ex3 = bests.limits.x_ratelimit_remaining
+another_data = bests.personal_beats["15"].acc # for example
 ```
 
