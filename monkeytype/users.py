@@ -9,8 +9,27 @@ class Users:
     def __init__(self, auth: Authorization):
         self.auth = auth
 
+
+    def check_name(self, name: str):
+        """
+        - Token is not required but recommended.
+        Checks if a given username is available.
+        If token empty can`t return uid, it will be ""
+
+        :param name: The username to be checked for availability.
+        :type name: str
+        :return: A CheckName object constructed from the API response.
+        :rtype: CheckName
+        """
+        response = requests.get(url=f"{self.auth.users}/checkName/{name}", headers=self.auth.auth_header)
+        json = response.json()
+        headers = response.headers
+
+        return CheckName.from_dict(json, headers)
+
     def get_personal_bests(self, mode: str, mode2: int | str | None = None):
         """
+        - Token is required.
         Fetches the user's personal bests from the API based on the provided mode and optional
         secondary mode. Handles the response and constructs appropriate objects.
 
@@ -38,7 +57,7 @@ class Users:
             return None
 
         if mode2 is None:
-            return PersonalBests.from_dict([json, headers])
+            return PersonalBests.from_dict(json, headers)
 
         return PersonalBests(
             personal_beats={PersonalBest.from_dict(json["data"][0])},
@@ -74,6 +93,27 @@ class Limits:
             x_ratelimit_limit=int(dict_["x-ratelimit-limit"]),
             x_ratelimit_remaining=int(dict_["x-ratelimit-remaining"]),
             x_ratelimit_reset=int(dict_["x-ratelimit-reset"])
+        )
+
+@dataclasses.dataclass
+class CheckName:
+    uid: int | None
+    available: bool
+    message: str
+    limits: Limits
+
+    @classmethod
+    def from_dict(cls, json: dict, header: dict):
+        if json["data"]:
+            uid = json["data"]["uid"]
+        else:
+            uid = None
+
+        return cls(
+            uid=uid,
+            available=False if json["message"] == "Username unavailable" else True,
+            message=json["message"],
+            limits=Limits.from_dict(header)
         )
 
 
@@ -113,10 +153,7 @@ class PersonalBests:
     limits: Limits
 
     @classmethod
-    def from_dict(cls, list_of_dicts: list[dict]):
-        json = list_of_dicts[0]
-        header = list_of_dicts[1]
-
+    def from_dict(cls, json: dict, header: dict):
         personal_beats = {}
         for mode, personal_bests in json["data"].items():
             for personal_best in personal_bests:
