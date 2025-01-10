@@ -173,7 +173,9 @@ class PersonalBest:
 
 @dataclasses.dataclass
 class PersonalBests:
-    personal_beats: dict[str, PersonalBest]
+    personal_beats: dict[str, PersonalBest] | None
+    time: dict[str, PersonalBest] | None
+    words: dict[str, PersonalBest] | None
     message: str
     limits: Limits
 
@@ -186,6 +188,17 @@ class PersonalBests:
 
         return cls(
             personal_beats=personal_beats,
+            time=personal_beats["time"] if "time" in personal_beats else None,
+            words=personal_beats["words"] if "words" in personal_beats else None,
             message=json['message'],
             limits=Limits.from_dict(header)
         )
+
+
+
+@dataclasses.dataclass
+class Profile:
+
+    @classmethod
+    def from_dict(cls, json: dict, header: dict):
+        pass

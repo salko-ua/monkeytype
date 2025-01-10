@@ -6,4 +6,4 @@ import os
 monkey = Authorization(os.getenv("MONKEYTYPE_TOKEN"))
 users = Users(monkey)
 
-pprint(users.get_stats())
+pprint(users.get_personal_bests("words"))
