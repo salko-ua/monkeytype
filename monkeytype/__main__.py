@@ -6,4 +6,4 @@ import os
 monkey = Authorization(os.getenv("MONKEYTYPE_TOKEN"))
 users = Users(monkey)
 
-pprint(users.get_tags())
+pprint(users.get_stats())

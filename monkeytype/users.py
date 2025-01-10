@@ -66,6 +66,7 @@ class Users:
         )
 
     def get_tags(self):
+        # TODO:
         response = requests.get(url=f"{self.auth.users}/tags", headers=self.auth.auth_header)
         json = response.json()
         return json
@@ -73,7 +74,8 @@ class Users:
     def get_stats(self):
         response = requests.get(url=f"{self.auth.users}/stats", headers=self.auth.auth_header)
         json = response.json()
-        return json
+        headers = response.headers
+        return PersonalStats.from_dict(json, headers)
 
     def get_profile(self, uid_or_username: str | int):
         response = requests.get(url=f"{self.auth.users}/{uid_or_username}/profile", headers=self.auth.auth_header)
@@ -97,7 +99,7 @@ class Limits:
 
 @dataclasses.dataclass
 class CheckName:
-    uid: int | None
+    uid: str | None
     available: bool
     message: str
     limits: Limits
@@ -112,6 +114,29 @@ class CheckName:
         return cls(
             uid=uid,
             available=False if json["message"] == "Username unavailable" else True,
+            message=json["message"],
+            limits=Limits.from_dict(header)
+        )
+
+@dataclasses.dataclass
+class PersonalStats:
+    uid: str
+    completed_tests: int
+    started_tests: int
+    time_typing: bool
+    message: str
+    limits: Limits
+
+    @classmethod
+    def from_dict(cls, json: dict, header: dict):
+        if json["message"] == "Unauthorized":
+            raise "Unauthorized"
+
+        return cls(
+            uid=json["data"]["_id"],
+            completed_tests=json["data"]["completedTests"],
+            started_tests=json["data"]["startedTests"],
+            time_typing=json["data"]["timeTyping"],
             message=json["message"],
             limits=Limits.from_dict(header)
         )
